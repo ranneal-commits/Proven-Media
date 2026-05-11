@@ -1,0 +1,7 @@
+{
+  "name": "Proven Media Team",
+  "description": "Performance-driven media and automation agency platform with AI Chatbot and Voice Agent.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

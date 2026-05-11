@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #102c4c;
+  --color-primary-hover: #184170;
+  --color-accent1: #32cffe;
+  --color-accent1-hover: #2bb3db;
+  --color-accent2: #0b1e33;
+  --color-accent2-hover: #102c4c;
+  --color-neutral: #FAFAF8;
+  --color-neutral-hover: #f0f0eb;
+  --color-neutral-200: #e5e5df;
+  --color-neutral-300: #d4d4cc;
+  --color-neutral-400: #a3a399;
+  --color-neutral-500: #73736b;
+  --color-neutral-600: #52524d;
+  --color-neutral-700: #40403b;
+
+  --animate-marquee: marquee 25s linear infinite;
+  --animate-marquee2: marquee2 25s linear infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+  @keyframes marquee2 {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(0%); }
+  }
+}
