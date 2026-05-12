@@ -104,6 +104,8 @@ router.post("/leads", async (req, res) => {
 
     // Sync to Lofty CRM if API key is present
     const apiKey = process.env.LOFTY_API_KEY;
+    let loftySyncStatus = "Skipped - No API Key";
+    
     if (apiKey) {
       const names = (name || "Unknown").split(" ");
       const firstName = names[0];
@@ -118,7 +120,7 @@ router.post("/leads", async (req, res) => {
       };
 
       try {
-        const response = await fetch(`${loftyApiBase}/leads`, {
+        let response = await fetch(`${loftyApiBase}/leads`, {
           method: "POST",
           headers: {
             "Authorization": `token ${apiKey}`,
@@ -126,18 +128,35 @@ router.post("/leads", async (req, res) => {
           },
           body: JSON.stringify(loftyPayload)
         });
+
+        if (!response.ok && (response.status === 401 || response.status === 400)) {
+          // Fallback to Bearer
+          response = await fetch(`${loftyApiBase}/leads`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${apiKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(loftyPayload)
+          });
+        }
         
         if (response.ok) {
+          loftySyncStatus = "Success";
           console.log("Successfully synced lead to Lofty", await response.json());
         } else {
+          loftySyncStatus = `Failed: ${response.status}`;
           console.error("Failed to sync lead to Lofty:", response.status, await response.text());
         }
       } catch (e) {
+        loftySyncStatus = "Error connecting";
         console.error("Failed to sync lead to Lofty (Error):", e);
       }
+    } else {
+      console.warn("LOFTY_API_KEY is not set in environment. Skipping Lofty sync.");
     }
 
-    res.status(201).json({ id, message: "Lead created successfully" });
+    res.status(201).json({ id, message: "Lead created successfully", loftySyncStatus });
   } catch (error) {
     console.error("Error creating lead:", error);
     res.status(500).json({ error: "Failed to create lead" });
