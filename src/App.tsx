@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -16,9 +17,20 @@ import CRM from "./pages/CRM";
 import Chatbot from "./components/Chatbot";
 import VoiceAgent from "./components/VoiceAgent";
 
+function ScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="flex flex-col min-h-screen bg-primary text-white font-sans">
         <Navbar />
         <main className="flex-grow">
@@ -33,6 +45,7 @@ export default function App() {
             <Route path="/resources" element={<Resources />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/book" element={<BookCall />} />
+            <Route path="/strategy-call" element={<BookCall />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/crm" element={<CRM />} />
           </Routes>

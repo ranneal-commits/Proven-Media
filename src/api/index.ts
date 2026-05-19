@@ -36,41 +36,56 @@ router.get("/lofty/:endpoint", async (req, res) => {
   const { endpoint } = req.params;
   const apiKey = process.env.LOFTY_API_KEY;
 
-  if (!apiKey) {
-    return res.status(401).json({ error: "Lofty API Key is missing. Please set it in the environment variables." });
-  }
+  let response: Response | null = null;
+  let didFetchFail = false;
 
   try {
-    // First try "token" header which is used by Lofty API Keys
-    let response = await fetch(`${loftyApiBase}/${endpoint}`, {
-      headers: {
-        "Authorization": `token ${apiKey}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      }
-    });
-
-    if (!response.ok && (response.status === 401 || response.status === 400)) {
-      // Fallback to Bearer scheme which is used for OAuth 2.0 tokens
+    if (apiKey) {
+      // First try "token" header which is used by Lofty API Keys
       response = await fetch(`${loftyApiBase}/${endpoint}`, {
         headers: {
-          "Authorization": `Bearer ${apiKey}`,
+          "Authorization": `token ${apiKey}`,
           "Content-Type": "application/json",
           "Accept": "application/json"
         }
       });
+
+      if (!response.ok && (response.status === 401 || response.status === 400)) {
+        // Fallback to Bearer scheme which is used for OAuth 2.0 tokens
+        response = await fetch(`${loftyApiBase}/${endpoint}`, {
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }
+        });
+      }
+    } else {
+      didFetchFail = true;
     }
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.warn(`Lofty API error on /${endpoint}:`, response.status, errorText);
+    if (!apiKey || (response && !response.ok)) {
+      const errorText = response ? await response.text() : "";
+      if (response && !response.ok) {
+        console.warn(`Lofty API error on /${endpoint}:`, response.status, errorText);
+      }
       
-      if (response.status === 401) {
+      if (!apiKey || (response && response.status === 401)) {
         // Provide mock data if authentication fails so the user can still see and test the UI
+        let dbLeads: any[] = [];
+        if (endpoint.includes("leads")) {
+          try {
+            const db = getDb();
+            dbLeads = db.prepare("SELECT * FROM leads ORDER BY created_at DESC").all();
+          } catch (e) {
+            console.error("Error fetching local leads for mock fallback", e);
+          }
+        }
+        
         return res.status(200).json({
           isMock: true,
           warnings: ["Authentication failed (401). Displaying mock data for testing."],
-          results: getMockLoftyData(endpoint)
+          results: [...dbLeads, ...getMockLoftyData(endpoint)]
         });
       }
 
@@ -81,8 +96,55 @@ router.get("/lofty/:endpoint", async (req, res) => {
       });
     }
 
-    const data = await response.json();
-    res.json(data);
+    let resultsData = [];
+    if (response && response.ok) {
+      resultsData = await response.json();
+    }
+
+    if (endpoint.includes("leads") && apiKey && response && response.ok) {
+      try {
+        const db = getDb();
+        const localLeads = db.prepare("SELECT * FROM leads ORDER BY created_at DESC").all();
+        // The API returns { _metadata: {}, leads: [...] } or an array
+        let apiLeads = Array.isArray(resultsData) ? resultsData : (resultsData.leads || resultsData.data || resultsData.results || []);
+        if (!Array.isArray(apiLeads)) apiLeads = [];
+
+        // Simple deduplication based on email
+        const getEmails = (item: any) => {
+          if (item.emails && Array.isArray(item.emails)) return item.emails.map((e: any) => e.address || e);
+          if (item.email) return [item.email];
+          return [];
+        };
+
+        const apiEmails = new Set();
+        apiLeads.forEach((l: any) => {
+          getEmails(l).forEach((e: string) => apiEmails.add(e.toLowerCase()));
+        });
+
+        const uniqueLocalLeads = localLeads.filter((ll: any) => {
+          if (!ll.email) return true;
+          return !apiEmails.has(ll.email.toLowerCase());
+        });
+
+        const combined = [...uniqueLocalLeads, ...apiLeads];
+
+        if (Array.isArray(resultsData)) {
+          resultsData = combined;
+        } else if (resultsData && Array.isArray(resultsData.leads)) {
+          resultsData.leads = combined;
+        } else if (resultsData && Array.isArray(resultsData.data)) {
+          resultsData.data = combined;
+        } else if (resultsData && Array.isArray(resultsData.results)) {
+          resultsData.results = combined;
+        } else {
+          resultsData = combined;
+        }
+      } catch (e) {
+        console.error("Error merging local leads into Lofty response:", e);
+      }
+    }
+
+    res.json(resultsData);
   } catch (error) {
     console.error(`Error proxying Lofty API (${endpoint}):`, error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -92,7 +154,7 @@ router.get("/lofty/:endpoint", async (req, res) => {
 // Leads API
 router.post("/leads", async (req, res) => {
   const db = getDb();
-  const { name, email, phone, business_name, service, budget_range, timeline } = req.body;
+  const { name, email, phone, business_name, service, budget_range, timeline, cta_location, tier } = req.body;
   const id = uuidv4();
 
   try {
@@ -116,7 +178,7 @@ router.post("/leads", async (req, res) => {
         lastName,
         emails: email ? [email] : [],
         phones: phone ? [phone] : [],
-        note: `Business: ${business_name || 'N/A'}, Service: ${service || 'N/A'}, Budget: ${budget_range || 'N/A'}, Timeline: ${timeline || 'N/A'}`
+        note: `Business: ${business_name || 'N/A'}, Service: ${service || 'N/A'}, Budget: ${budget_range || 'N/A'}, Timeline: ${timeline || 'N/A'}, CTA: ${cta_location || 'N/A'}, Tier: ${tier || 'N/A'}`
       };
 
       try {

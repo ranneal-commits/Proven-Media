@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, BarChart3, Zap, Shield, Users, Play, Star, Heart, MessageCircle, Share2, TrendingUp, X, Bot, PhoneCall, CalendarCheck, DollarSign } from "lucide-react";
 import { motion } from "motion/react";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { PrimaryCTA, SecondaryCTA } from "../components/CTA";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -52,6 +53,26 @@ export default function Home() {
           >
             <div className="w-1 h-2 bg-current rounded-full" />
           </motion.div>
+        </div>
+      </section>
+
+      {/* Mid-Homepage CTA Block */}
+      <section className="py-12 md:py-20 bg-primary-hover border-y border-neutral-800">
+        <div className="max-w-[700px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm font-semibold text-accent1 uppercase tracking-widest mb-4">
+            Ready to Start?
+          </p>
+          <h2 className="text-3xl md:text-4xl font-serif text-white mb-8">
+            Two ways to begin.
+          </h2>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <PrimaryCTA href="/strategy-call" ctaLocation="homepage-mid" className="w-full sm:w-auto">
+              Book a Strategy Call
+            </PrimaryCTA>
+            <SecondaryCTA href="https://proven-marketing-analysis.netlify.app/" ctaLocation="homepage-mid" className="w-full sm:w-auto">
+              Get a Free Marketing Audit
+            </SecondaryCTA>
+          </div>
         </div>
       </section>
 
@@ -379,24 +400,6 @@ export default function Home() {
             <span className="text-2xl font-bold tracking-wider mx-12">Heartland Mortgage</span>
             <span className="text-2xl font-bold tracking-wider mx-12">Cash4keys ND</span>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-32 bg-primary-hover text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Ready to scale your authority?
-          </h2>
-          <p className="text-xl text-neutral-400 mb-10">
-            Let's map out your custom growth infrastructure.
-          </p>
-          <Link
-            to="/book"
-            className="inline-flex bg-accent1 text-primary px-8 py-4 rounded-full font-semibold text-lg hover:bg-accent1-hover transition-colors items-center gap-2"
-          >
-            Book Your Strategy Call <ArrowRight size={20} />
-          </Link>
         </div>
       </section>
 

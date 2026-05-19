@@ -4,6 +4,7 @@ import {
   Share2, Video, Target, LayoutTemplate, MessageSquare, 
   Mic, Filter, Database, LineChart, Play, X, ArrowRight 
 } from "lucide-react";
+import { PrimaryCTA, SecondaryCTA } from "../components/CTA";
 
 const servicesData = [
   {
@@ -118,6 +119,11 @@ export default function Services() {
             Comprehensive media and automation infrastructure for modern B2B brands. 
             Select a service below to see real-world examples and impact.
           </p>
+          <div className="mt-8">
+            <PrimaryCTA href="/strategy-call" ctaLocation="services-page">
+              Book a Strategy Call
+            </PrimaryCTA>
+          </div>
         </div>
 
         {/* Main Content Area */}
@@ -209,6 +215,17 @@ export default function Services() {
           </div>
 
         </div>
+
+        {/* Bottom CTAs */}
+        <div className="mt-20 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <PrimaryCTA href="/strategy-call" ctaLocation="services-page" className="w-full sm:w-auto">
+            Book a Strategy Call
+          </PrimaryCTA>
+          <SecondaryCTA href="https://proven-marketing-analysis.netlify.app/" ctaLocation="services-page" className="w-full sm:w-auto">
+            Get a Free Marketing Audit
+          </SecondaryCTA>
+        </div>
+
       </div>
 
       {/* Video Modal */}

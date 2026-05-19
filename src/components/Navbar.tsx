@@ -35,7 +35,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              to="/book"
+              to="/strategy-call?cta=top-nav"
               className="bg-accent1 text-primary px-5 py-2.5 rounded-full text-sm font-medium hover:bg-accent1-hover transition-colors"
             >
               Book a Strategy Call
@@ -68,7 +68,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              to="/book"
+              to="/strategy-call?cta=top-nav"
               className="block px-3 py-2 text-base font-medium text-primary bg-accent1 hover:bg-accent1-hover rounded-md mt-4 text-center"
               onClick={() => setIsOpen(false)}
             >

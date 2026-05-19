@@ -1,5 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PrimaryCTA, SecondaryCTA } from "../components/CTA";
 
 export default function Pricing() {
   const tiers = [
@@ -128,12 +129,14 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/book"
-                className={`w-full py-4 rounded-xl font-semibold text-center transition-colors ${tier.popular ? "bg-accent1 text-primary hover:bg-accent1-hover" : "bg-white/10 text-white hover:bg-white/20"}`}
+              <PrimaryCTA
+                href="/strategy-call"
+                ctaLocation="pricing-page"
+                tier={tier.name.toLowerCase()}
+                className="w-full flex-none"
               >
                 Get Started
-              </Link>
+              </PrimaryCTA>
             </div>
           ))}
         </div>

@@ -1,7 +1,34 @@
 import React, { useState } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
+const trackEvent = (eventName: string, params?: Record<string, any>) => {
+  if (typeof window !== "undefined" && typeof (window as unknown as any).gtag === "function") {
+    (window as unknown as any).gtag("event", eventName, params);
+  }
+};
+
 export default function BookCall() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const ctaLocation = searchParams.get("cta") || "direct";
+  const selectedTier = searchParams.get("tier") || "none";
+
+  let initialBudgetRange = "";
+  if (selectedTier === "basic" || selectedTier === "premium") {
+    initialBudgetRange = "Under $1,000";
+  } else if (selectedTier === "elite") {
+    initialBudgetRange = "$1,000 - $2,500";
+  }
+
+  const getTierInfo = (tier: string) => {
+    switch (tier) {
+      case "basic": return { name: "Basic", price: "$475" };
+      case "premium": return { name: "Premium", price: "$635" };
+      case "elite": return { name: "Elite", price: "$1,195" };
+      default: return null;
+    }
+  };
+  const tierDetails = getTierInfo(selectedTier);
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -9,8 +36,10 @@ export default function BookCall() {
     phone: "",
     business_name: "",
     service: "",
-    budget_range: "",
+    budget_range: initialBudgetRange,
     timeline: "",
+    cta_location: ctaLocation,
+    tier: selectedTier,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -25,6 +54,13 @@ export default function BookCall() {
         body: JSON.stringify(formData),
       });
       if (res.ok) {
+        trackEvent("book_strategy_call_submit", {
+          cta_location: formData.cta_location,
+          primary_service: formData.service,
+          budget_range: formData.budget_range,
+          timeline: formData.timeline,
+          tier: formData.tier,
+        });
         setIsSuccess(true);
       }
     } catch (error) {
@@ -72,6 +108,8 @@ export default function BookCall() {
 
         <div className="bg-primary-hover rounded-3xl shadow-xl border border-neutral-700 p-8 md:p-12">
           <form onSubmit={handleSubmit} className="space-y-8">
+            <input type="hidden" name="cta_location" value={ctaLocation} />
+            <input type="hidden" name="tier" value={selectedTier} />
             {step === 1 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <h3 className="text-2xl font-semibold mb-6">
@@ -152,6 +190,11 @@ export default function BookCall() {
 
             {step === 2 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {tierDetails && (
+                  <div className="bg-[#e8f0fb] border-l-[3px] border-l-[#1e5bb8] px-[20px] py-[16px] rounded-[4px] text-neutral-900 mb-6 font-medium">
+                    You're interested in our {tierDetails.name} plan ({tierDetails.price}/mo). A few quick details and Kayla will reach out to walk you through it.
+                  </div>
+                )}
                 <h3 className="text-2xl font-semibold mb-6">
                   2. Project Details
                 </h3>
@@ -181,25 +224,27 @@ export default function BookCall() {
                     </option>
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">
-                    Monthly Budget Range
-                  </label>
-                  <select
-                    required
-                    className="w-full px-4 py-3 rounded-xl border border-neutral-700 bg-primary text-white focus:ring-2 focus:ring-accent1 focus:border-transparent outline-none transition-all"
-                    value={formData.budget_range}
-                    onChange={(e) =>
-                      setFormData({ ...formData, budget_range: e.target.value })
-                    }
-                  >
-                    <option value="">Select budget...</option>
-                    <option value="Under $1,000">Under $1,000</option>
-                    <option value="$1,000 - $2,500">$1,000 - $2,500</option>
-                    <option value="$2,500 - $5,000">$2,500 - $5,000</option>
-                    <option value="$5,000+">$5,000+</option>
-                  </select>
-                </div>
+                {!tierDetails && (
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-300 mb-2">
+                      Monthly Budget Range
+                    </label>
+                    <select
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-700 bg-primary text-white focus:ring-2 focus:ring-accent1 focus:border-transparent outline-none transition-all"
+                      value={formData.budget_range}
+                      onChange={(e) =>
+                        setFormData({ ...formData, budget_range: e.target.value })
+                      }
+                    >
+                      <option value="">Select budget...</option>
+                      <option value="Under $1,000">Under $1,000</option>
+                      <option value="$1,000 - $2,500">$1,000 - $2,500</option>
+                      <option value="$2,500 - $5,000">$2,500 - $5,000</option>
+                      <option value="$5,000+">$5,000+</option>
+                    </select>
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-neutral-300 mb-2">
                     Timeline
