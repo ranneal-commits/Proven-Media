@@ -1,15 +1,10 @@
 import { motion } from "motion/react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from "recharts";
 import { 
-  TrendingUp, 
-  TrendingDown, 
   Facebook, 
   Instagram, 
-  Youtube, 
   Linkedin, 
   Mail, 
-  AlertCircle,
-  Lightbulb
 } from "lucide-react";
 
 const followerGrowthData = [
@@ -256,103 +251,7 @@ export default function Insights() {
           </motion.div>
         </div>
 
-        {/* Detailed Breakdown */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Wins Column */}
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
-                <TrendingUp size={28} />
-              </div>
-              <h2 className="text-3xl font-bold text-white">Monthly Wins</h2>
-            </div>
 
-            <div className="space-y-4">
-              <div className="bg-primary-hover p-6 rounded-3xl border border-neutral-700 group hover:border-[#1877F2]/30 transition-colors">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-                  <Facebook className="text-[#1877F2]" size={20} /> Facebook
-                </h3>
-                <ul className="space-y-3 text-neutral-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    Followers increased and engagement held stable despite algorithmic shifts.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    Impressions showing signs of Q1 recovery.
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-primary-hover p-6 rounded-3xl border border-neutral-700 relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
-                <div className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl">
-                  BREAKOUT
-                </div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-                  <Linkedin className="text-[#0A66C2]" size={20} /> LinkedIn (Erik Peterson)
-                </h3>
-                <ul className="space-y-3 text-neutral-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    Followers up to 2,174.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    Impressions sustained above 40k. Profile views continue to double.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    Demonstrating the strongest personal-brand visibility on record.
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Opportunities Column */}
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20">
-                <Lightbulb size={28} />
-              </div>
-              <h2 className="text-3xl font-bold text-white">Opportunities</h2>
-            </div>
-
-            <div className="space-y-4">
-              <div className="bg-primary-hover p-6 rounded-3xl border border-neutral-700 group hover:border-[#E4405F]/30 transition-colors">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-                  <Instagram className="text-[#E4405F]" size={20} /> Instagram
-                </h3>
-                <ul className="space-y-3 text-neutral-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-500 mt-1"><AlertCircle size={16} /></span>
-                    Reach is high, but impression frequency is declining.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-500 mt-1"><AlertCircle size={16} /></span>
-                    Action: Increase posting velocity of short-form Reels to capitalize on discovery reach.
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-primary-hover p-6 rounded-3xl border border-neutral-700 group hover:border-[#FF0000]/30 transition-colors">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-                  <Youtube className="text-[#FF0000]" size={20} /> YouTube
-                </h3>
-                <ul className="space-y-3 text-neutral-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-500 mt-1"><AlertCircle size={16} /></span>
-                    Subscribers stabilized but video views and impressions plateaued.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-500 mt-1"><AlertCircle size={16} /></span>
-                    Action: Revive consistent long-form uploads or adapt high-performing LinkedIn content into YouTube Shorts.
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
 
       </div>
     </div>

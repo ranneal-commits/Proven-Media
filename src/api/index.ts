@@ -96,7 +96,7 @@ router.get("/lofty/:endpoint", async (req, res) => {
       });
     }
 
-    let resultsData = [];
+    let resultsData: any = [];
     if (response && response.ok) {
       resultsData = await response.json();
     }
@@ -151,6 +151,86 @@ router.get("/lofty/:endpoint", async (req, res) => {
   }
 });
 
+function buildTagsFromFormData(data: any): string[] {
+  const tags: string[] = ["source:website-contact", "stage:inquiry"];
+
+  // CTA Location
+  tags.push(`cta:${data.cta_location || "direct"}`);
+
+  // Tier
+  if (data.tier === "basic") {
+    tags.push("tier:basic", "intent:tier-interest");
+  } else if (data.tier === "premium") {
+    tags.push("tier:premium", "intent:tier-interest");
+  } else if (data.tier === "elite") {
+    tags.push("tier:elite", "intent:tier-interest");
+  } else {
+    tags.push("intent:browsing");
+  }
+
+  // Primary Service Interest
+  const serviceMap: Record<string, string> = {
+    "Social Media Management": "service:social-media",
+    "Website Design & Development": "service:website",
+    "SEO & Local Search": "service:seo-local",
+    "Paid Advertising (Google / Meta)": "service:paid-ads",
+    "Content & Brand Strategy": "service:content-brand",
+    "Full Marketing Management": "service:full-management",
+    "Not sure yet — let's talk": "service:unsure",
+  };
+  if (data.service && serviceMap[data.service]) {
+    tags.push(serviceMap[data.service]);
+  }
+
+  // Monthly Budget Range
+  const budgetMap: Record<string, string> = {
+    "Under $1,000": "budget:under-1k",
+    "$1,000 – $2,500": "budget:1k-2.5k",
+    "$2,500 – $5,000": "budget:2.5k-5k",
+    "$5,000 – $10,000": "budget:5k-10k",
+    "$10,000+": "budget:10k-plus",
+    "Not sure yet": "budget:unsure",
+  };
+  if (data.budget_range && budgetMap[data.budget_range]) {
+    tags.push(budgetMap[data.budget_range]);
+  }
+
+  // Timeline
+  const timelineMap: Record<string, string> = {
+    "Immediately": "timeline:immediately",
+    "Within 30 days": "timeline:30-days",
+    "1–3 months out": "timeline:1-3-months",
+    "Just exploring": "timeline:exploring",
+  };
+  if (data.timeline && timelineMap[data.timeline]) {
+    tags.push(timelineMap[data.timeline]);
+  }
+
+  // Priority Tag
+  const fastTimeline = data.timeline === "Immediately" || data.timeline === "Within 30 days";
+  const within3Months = fastTimeline || data.timeline === "1–3 months out";
+  const hasTier = data.tier === "basic" || data.tier === "premium" || data.tier === "elite";
+  const highBudget = data.budget_range === "$5,000 – $10,000" || data.budget_range === "$10,000+";
+  const mediumBudgetOrHigher = data.budget_range === "$2,500 – $5,000" || highBudget;
+
+  let priority = "priority:cold";
+  if (
+    data.tier === "elite" ||
+    (hasTier && fastTimeline) ||
+    (highBudget && fastTimeline)
+  ) {
+    priority = "priority:hot";
+  } else if (
+    (mediumBudgetOrHigher && within3Months) ||
+    (hasTier && data.timeline === "1–3 months out")
+  ) {
+    priority = "priority:warm";
+  }
+  tags.push(priority);
+
+  return tags;
+}
+
 // Leads API
 router.post("/leads", async (req, res) => {
   const db = getDb();
@@ -178,7 +258,8 @@ router.post("/leads", async (req, res) => {
         lastName,
         emails: email ? [email] : [],
         phones: phone ? [phone] : [],
-        note: `Business: ${business_name || 'N/A'}, Service: ${service || 'N/A'}, Budget: ${budget_range || 'N/A'}, Timeline: ${timeline || 'N/A'}, CTA: ${cta_location || 'N/A'}, Tier: ${tier || 'N/A'}`
+        note: `Business: ${business_name || 'N/A'}, Service: ${service || 'N/A'}, Budget: ${budget_range || 'N/A'}, Timeline: ${timeline || 'N/A'}, CTA: ${cta_location || 'N/A'}, Tier: ${tier || 'N/A'}`,
+        tags: buildTagsFromFormData(req.body)
       };
 
       try {

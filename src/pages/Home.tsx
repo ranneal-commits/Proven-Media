@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, BarChart3, Zap, Shield, Users, Play, Star, Heart, MessageCircle, Share2, TrendingUp, X, Bot, PhoneCall, CalendarCheck, DollarSign } from "lucide-react";
+import { ArrowRight, BarChart3, Zap, Shield, Users, Play, Star, Heart, MessageCircle, Share2, TrendingUp, X, Bot, PhoneCall, CalendarCheck, DollarSign, Calendar, Clock, Video, FileCheck, ClipboardList, Search, FileText, MessageSquare } from "lucide-react";
 import { motion } from "motion/react";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { PrimaryCTA, SecondaryCTA } from "../components/CTA";
@@ -23,7 +23,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0 pointer-events-none md:pointer-events-auto">
           <ErrorBoundary>
             <iframe 
-              src="https://my.spline.design/reactiveorb-LrrnReyoXQafX2t29owkYATg/" 
+              src="https://my.spline.design/reactiveorb-LrrnReyoXQafX2t29owkYATg/?v=2" 
               frameBorder="0" 
               width="100%" 
               height="100%"
@@ -38,6 +38,18 @@ export default function Home() {
         <div className="absolute inset-y-0 right-0 w-[35%] z-10 pointer-events-auto" />
         <div className="absolute inset-x-0 top-0 h-[25%] z-10 pointer-events-auto" />
         <div className="absolute inset-x-0 bottom-0 h-[25%] z-10 pointer-events-auto" />
+
+        {/* Hero CTAs Over Spline */}
+        <div className="absolute inset-x-0 bottom-32 z-20 flex flex-col sm:flex-row justify-center items-center gap-4 px-4 pointer-events-none">
+          <div className="pointer-events-auto flex flex-col sm:flex-row w-full sm:w-auto items-center justify-center gap-4">
+            <PrimaryCTA href="/strategy-call" ctaLocation="homepage-hero" className="w-full sm:w-auto">
+              Book a Strategy Call
+            </PrimaryCTA>
+            <SecondaryCTA href="https://proven-marketing-analysis.netlify.app/" ctaLocation="homepage-hero" className="w-full sm:w-auto backdrop-blur-sm bg-primary/30">
+              Get a Free Marketing Audit
+            </SecondaryCTA>
+          </div>
+        </div>
 
         {/* Scroll Indicator */}
         <div 
@@ -56,20 +68,138 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Mid-Homepage CTA Block */}
-      <section className="py-12 md:py-20 bg-primary-hover border-y border-neutral-800">
-        <div className="max-w-[700px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm font-semibold text-accent1 uppercase tracking-widest mb-4">
-            Ready to Start?
-          </p>
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-8">
-            Two ways to begin.
-          </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <PrimaryCTA href="/strategy-call" ctaLocation="homepage-mid" className="w-full sm:w-auto">
+      {/* Process Flow Section */}
+      <section className="py-24 bg-primary border-y border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-serif tracking-tight mb-4 text-white">
+              Here's What Happens Next
+            </h2>
+            <p className="text-lg text-neutral-400 max-w-[600px] mx-auto">
+              Two paths, two different experiences. Pick the one that fits where you are.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative">
+            {/* Desktop divider line */}
+            <div className="hidden md:block absolute left-1/2 top-10 bottom-10 w-px bg-neutral-800 -translate-x-1/2 border-r border-dashed border-neutral-700" />
+
+            {/* Path 1: Strategy Call */}
+            <div className="flex flex-col relative space-y-6">
+              <h3 className="text-2xl font-bold text-center text-white mb-6">Book a Strategy Call</h3>
+              
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">1</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><Calendar size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">You book the call</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">Pick a time on our calendar that works for you.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="w-px h-6 bg-neutral-700 mx-auto" />
+
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">2</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><Clock size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">You get a confirmation</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">Email confirms your time and what to bring to the conversation.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-px h-6 bg-neutral-700 mx-auto" />
+
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">3</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><Video size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">30-minute conversation</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">We talk about your business, your goals, and how we can help. Honest, direct.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-px h-6 bg-neutral-700 mx-auto" />
+
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">4</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><FileCheck size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">Custom plan, if it's a fit</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">If we're a match, we send a clear plan with scope and pricing. You decide.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Path 2: Audit */}
+            <div className="flex flex-col relative space-y-6">
+              <h3 className="text-2xl font-bold text-center text-white mb-6">Get a Free Marketing Audit</h3>
+              
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">1</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><ClipboardList size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">2-minute form</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">Tell us about your business. Just the basics.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="w-px h-6 bg-neutral-700 mx-auto" />
+
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">2</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><Search size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">We analyze your presence</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">Our system reviews your website, social media, and local visibility.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-px h-6 bg-neutral-700 mx-auto" />
+
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">3</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><FileText size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">Written audit in your inbox</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">Within 24 hours, you get a personalized snapshot with 3-5 growth opportunities.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-px h-6 bg-neutral-700 mx-auto" />
+
+              <div className="bg-primary-hover p-6 rounded-[8px] border border-neutral-700 relative z-10 flex-1">
+                <div className="text-accent1 text-sm font-bold mb-2">4</div>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 text-accent1"><MessageSquare size={28} /></div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-2">Talk if you want to</h4>
+                    <p className="text-neutral-400 text-sm leading-relaxed">Want to walk through the audit together? Book a call. No pressure.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <PrimaryCTA href="/strategy-call" ctaLocation="homepage-process-flow" className="w-full sm:w-auto">
               Book a Strategy Call
             </PrimaryCTA>
-            <SecondaryCTA href="https://proven-marketing-analysis.netlify.app/" ctaLocation="homepage-mid" className="w-full sm:w-auto">
+            <SecondaryCTA href="https://proven-marketing-analysis.netlify.app/" ctaLocation="homepage-process-flow" className="w-full sm:w-auto">
               Get a Free Marketing Audit
             </SecondaryCTA>
           </div>

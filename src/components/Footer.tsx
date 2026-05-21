@@ -29,9 +29,13 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
-              <span className="font-bold text-xl tracking-tight text-white block mb-4">
-                PROVEN MEDIA TEAM
-              </span>
+              <Link to="/" className="inline-block mb-4">
+                <img 
+                  src="/assets/logo.png" 
+                  alt="Proven Media Marketing" 
+                  className="h-8 w-auto object-contain"
+                />
+              </Link>
               <p className="text-sm max-w-sm">
                 Performance-driven media and automation agency building brand
                 authority, lead generation systems, and AI-powered business
