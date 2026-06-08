@@ -18,14 +18,17 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-primary/90 backdrop-blur-md border-b border-neutral-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 md:h-20 items-center">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <img 
-                src="/assets/logo.png" 
-                alt="Proven Media Marketing" 
-                className="h-8 md:h-11 w-auto object-contain"
-              />
+        <div className="flex justify-between h-24 md:h-28 items-center">
+          <div className="flex items-center gap-4 md:gap-8">
+            <Link to="/" className="flex-shrink-0 flex items-center h-full">
+              {/* Using a wrapper to safely zoom the logo if it has built-in padding, without messing up layout */}
+              <div className="w-24 h-24 md:w-32 md:h-32 relative overflow-hidden flex items-center justify-center">
+                <img 
+                  src="/assets/logo.png" 
+                  alt="Proven Media Marketing" 
+                  className="absolute w-[160%] max-w-none h-auto object-contain"
+                />
+              </div>
             </Link>
 
             <div className="hidden md:flex space-x-6 items-center">

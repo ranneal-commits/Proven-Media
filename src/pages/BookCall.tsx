@@ -40,6 +40,7 @@ export default function BookCall() {
     timeline: "",
     cta_location: ctaLocation,
     tier: selectedTier,
+    form_source: "strategy_call",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);

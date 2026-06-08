@@ -154,6 +154,10 @@ router.get("/lofty/:endpoint", async (req, res) => {
 function buildTagsFromFormData(data: any): string[] {
   const tags: string[] = ["source:website-contact", "stage:inquiry"];
 
+  if (data.form_source === "strategy_call") {
+    tags.push("action:needs-call-booking");
+  }
+
   // CTA Location
   tags.push(`cta:${data.cta_location || "direct"}`);
 
